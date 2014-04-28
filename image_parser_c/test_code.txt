@@ -1,0 +1,48 @@
+Image test;
+test.read("levels_99.png");
+
+Image ref;
+ref.read("legend\\wizard.png");
+
+int row = 0;
+int col = 0;
+
+
+int matches = 0;
+
+while (row < v_tiles) {
+	Image temp = test;
+	int left = col*tilesize;
+	int right = left + tilesize;
+	int top = row*tilesize;
+	int bottom = row*tilesize + tilesize;	
+
+	temp.crop(Geometry(tilesize, tilesize, left, top));
+
+	temp.compare(ref);
+
+	
+
+	if (temp.meanErrorPerPixel() < 10000) {
+		cout << temp.meanErrorPerPixel() << endl;
+		cout << "Match\n";
+
+		matches++;
+	}
+
+	//temp.write("testtile.png");
+
+	col++;
+	if (col == h_tiles) {
+		col = 0;
+		row++;
+	}
+}
+cout << "Matches: " << matches << endl;
+
+std::cin.get();
+
+// Save to file
+cout << "Writing..." << endl;
+test.compressType( RLECompression );
+test.write("testout.png");
